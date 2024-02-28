@@ -19,7 +19,7 @@ export default moduleContext;
 export function ModuleProvider({
   children,
 }: Readonly<{ children: ReactNode }>) {
-  const [module, setModule] = useState("");
+  const [module, setModule] = useState("Books");
 
   const contextData = useMemo(
     () => ({
