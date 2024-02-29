@@ -1,29 +1,18 @@
-import deleteBook from "@/api/books/deleteBook";
-import updateBook from "@/api/books/updateBook";
+import createBook from "@/api/books/createBook";
 import booksContext from "@/context/books-context";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, TextField } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { useContext, useState } from "react";
 
-export default function ModalContent({ row, close }: any) {
+export default function CreateBookModal({ close }: any) {
   const [loading, setLoading] = useState(false);
-  const [loadingDelBtn, setLoadingDelBtn] = useState(false);
   const { bookList, setBookList } = useContext(booksContext)!;
 
   const flexibleBoxStyles = {
     display: "flex",
     alignItems: "end",
     justifiContent: "space-between",
-  };
-
-  const handleDeleteBook = async () => {
-    handleStartLoadingDelBtn();
-    await deleteBook(row.id);
-    const newBookList = bookList.filter((book) => book.id !== row.id);
-    setBookList(newBookList);
-    setLoadingDelBtn(false);
-    close(false);
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -35,11 +24,10 @@ export default function ModalContent({ row, close }: any) {
       publicationYear: data.get("publicationYear") as string,
       title: data.get("title") as string,
     };
-    const promise = updateBook(body, row.id);
+    const promise = createBook(body);
     promise
       .then((res) => {
-        const newBookList = bookList.filter((book) => book.id !== row.id);
-        newBookList.push(res.data);
+        const newBookList = [...bookList, res.data];
         setBookList(newBookList);
         setLoading(false);
         close(false);
@@ -53,9 +41,6 @@ export default function ModalContent({ row, close }: any) {
     setLoading(true);
   };
 
-  const handleStartLoadingDelBtn = () => {
-    setLoadingDelBtn(true);
-  };
   return (
     <Box>
       <Box
@@ -64,29 +49,26 @@ export default function ModalContent({ row, close }: any) {
         }}
       >
         <Typography component="h2" variant="h6">
-          Edição de livro número {row.id}
+          Criação de livro
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate>
           <Box sx={flexibleBoxStyles}>
             <TextField
               type="text"
               name="author"
-              label="Novo autor"
+              label="autor"
               variant="standard"
               margin="normal"
               sx={{
                 mr: "30px",
               }}
             />
-            <Typography variant="caption">
-              <strong>Autor:</strong> {row.author}
-            </Typography>
           </Box>
           <Box sx={flexibleBoxStyles}>
             <TextField
               name="publicationYear"
               type="number"
-              label="Novo ano de publicação"
+              label="ano de publicação"
               variant="standard"
               inputProps={{ maxLength: 4 }}
               margin="normal"
@@ -94,24 +76,18 @@ export default function ModalContent({ row, close }: any) {
                 mr: "30px",
               }}
             />
-            <Typography variant="caption">
-              <strong>Ano de publicação:</strong> {row.publicationYear}
-            </Typography>
           </Box>
           <Box sx={flexibleBoxStyles}>
             <TextField
               name="title"
               type="text"
-              label="Novo título"
+              label="título"
               variant="standard"
               margin="normal"
               sx={{
                 mr: "30px",
               }}
             />
-            <Typography variant="caption">
-              <strong>Título:</strong> {row.title}
-            </Typography>
           </Box>
           <Box
             sx={{
@@ -121,17 +97,9 @@ export default function ModalContent({ row, close }: any) {
               justifyContent: "space-between",
             }}
           >
-            <LoadingButton
-              onClick={handleDeleteBook}
-              color="error"
-              variant="outlined"
-              loading={loadingDelBtn}
-            >
-              excluir
-            </LoadingButton>
             <Button onClick={() => close(false)}>cancelar</Button>
             <LoadingButton variant="contained" type="submit" loading={loading}>
-              Salvar
+              Criar
             </LoadingButton>
           </Box>
         </Box>
