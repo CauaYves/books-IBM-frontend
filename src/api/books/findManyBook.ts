@@ -16,8 +16,4 @@ async function findMany() {
   }
 }
 
-const bookEndpoints = {
-  findMany,
-};
-
-export default bookEndpoints;
+export default findMany;

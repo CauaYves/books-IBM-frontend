@@ -6,7 +6,9 @@ import Toolbar from "@mui/material/Toolbar";
 import Sidebar from "@/components/molecules/sidebar";
 import moduleContext, { ModuleContextType } from "@/context/module-context";
 import DataTable from "@/components/organism/table";
-import bookEndpoints from "@/api/books/findMany";
+import findManyBooks from "@/api/books/findManyBook";
+import booksContext from "@/context/books-context";
+
 interface OrganismObjects {
   [key: string]: React.ReactNode;
 }
@@ -14,18 +16,18 @@ export type ModulesKey = "Books" | "Orders" | "Customers";
 
 export default function Dashboard() {
   const { module }: ModuleContextType = React.useContext(moduleContext)!;
-  const [books, setBooks] = React.useState([]);
+  const { bookList, setBookList } = React.useContext(booksContext)!;
 
   React.useEffect(() => {
     async function fetchData() {
-      const bookList = await bookEndpoints.findMany();
-      setBooks(bookList);
+      const bookList = await findManyBooks();
+      setBookList(bookList);
     }
     fetchData();
-  }, [books]);
+  }, [setBookList]);
 
   const pages: OrganismObjects = {
-    Books: <DataTable rows={books} />,
+    Books: <DataTable rows={bookList} />,
     Orders: <p>orders</p>,
     Customers: <p>Customers</p>,
   };

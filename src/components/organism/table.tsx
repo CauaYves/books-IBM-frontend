@@ -1,38 +1,53 @@
 import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { Book } from "@/api/books/findMany";
-import LoadingScreen from "../molecules/loading-screen";
+import EditIcon from "@mui/icons-material/Edit";
+import { useContext, useState } from "react";
+import { Dialog, IconButton } from "@mui/material";
+import ModalContent from "../molecules/modal";
+import booksContext from "@/context/books-context";
 
-const columns: GridColDef[] = [
-  { field: "id", headerName: "ID", width: 70 },
-  { field: "title", headerName: "Título", width: 270 },
-  { field: "author", headerName: "Autor", width: 200 },
-  {
-    field: "publicationYear",
-    headerName: "Ano de publicação",
-    type: "number",
-    width: 130,
-  },
-];
+export default function DataTable() {
+  const [open, setOpen] = useState(false);
+  const [editLine, setEditLine] = useState({});
+  const { bookList } = useContext(booksContext)!;
 
-interface DatatableProps {
-  rows: Book[];
-}
+  const columns: GridColDef[] = [
+    { field: "id", headerName: "ID", width: 70 },
+    { field: "title", headerName: "Título", width: 270 },
+    { field: "author", headerName: "Autor", width: 200 },
+    {
+      field: "publicationYear",
+      headerName: "Ano de publicação",
+      type: "number",
+      width: 130,
+    },
+    {
+      field: "actions",
+      headerName: "Ações",
+      width: 0,
+      renderCell: () => (
+        <IconButton onClick={handleOpen}>
+          <EditIcon fontSize="small" />
+        </IconButton>
+      ),
+    },
+  ];
 
-export default function DataTable({ rows }: Readonly<DatatableProps>) {
-  const [contentLoaded, setContentLoaded] = React.useState(true);
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
-  React.useEffect(() => {
-    if (rows.length !== 0) {
-      setContentLoaded(true);
-    }
-  }, [contentLoaded, rows.length]);
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
-    <div style={{ height: 1000, width: "100%" }}>
-      {!contentLoaded ? <LoadingScreen /> : null}
+    <div style={{ height: "auto", width: "100%" }}>
+      <Dialog open={open} onClose={handleClose}>
+        <ModalContent row={editLine} close={setOpen} />
+      </Dialog>
       <DataGrid
-        rows={rows}
+        rows={bookList}
         columns={columns}
         initialState={{
           pagination: {
@@ -41,6 +56,7 @@ export default function DataTable({ rows }: Readonly<DatatableProps>) {
         }}
         pageSizeOptions={[5, 10, 15, 20]}
         checkboxSelection
+        onRowClick={(line) => setEditLine(line.row)}
       />
     </div>
   );

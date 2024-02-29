@@ -1,6 +1,7 @@
 "use client";
 import { Inter } from "next/font/google";
 import { ModuleProvider } from "@/context/module-context";
+import { BooksProvider } from "@/context/books-context";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
@@ -11,7 +12,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={inter.className}>
-        <ModuleProvider>{children}</ModuleProvider>
+        <BooksProvider>
+          <ModuleProvider>{children}</ModuleProvider>
+        </BooksProvider>
       </body>
     </html>
   );
