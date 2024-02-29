@@ -1,4 +1,3 @@
-import deleteBook from "@/api/books/deleteBook";
 import updateBook from "@/api/books/updateBook";
 import booksContext from "@/context/books-context";
 import { LoadingButton } from "@mui/lab";
@@ -8,7 +7,6 @@ import { useContext, useState } from "react";
 
 export default function ModalContent({ row, close }: any) {
   const [loading, setLoading] = useState(false);
-  const [loadingDelBtn, setLoadingDelBtn] = useState(false);
   const { bookList, setBookList } = useContext(booksContext)!;
 
   const flexibleBoxStyles = {
@@ -16,16 +14,6 @@ export default function ModalContent({ row, close }: any) {
     alignItems: "end",
     justifiContent: "space-between",
   };
-
-  const handleDeleteBook = async () => {
-    handleStartLoadingDelBtn();
-    await deleteBook(row.id);
-    const newBookList = bookList.filter((book) => book.id !== row.id);
-    setBookList(newBookList);
-    setLoadingDelBtn(false);
-    close(false);
-  };
-
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     handleStartLoading();
@@ -53,9 +41,6 @@ export default function ModalContent({ row, close }: any) {
     setLoading(true);
   };
 
-  const handleStartLoadingDelBtn = () => {
-    setLoadingDelBtn(true);
-  };
   return (
     <Box>
       <Box
@@ -121,14 +106,6 @@ export default function ModalContent({ row, close }: any) {
               justifyContent: "space-between",
             }}
           >
-            <LoadingButton
-              onClick={handleDeleteBook}
-              color="error"
-              variant="outlined"
-              loading={loadingDelBtn}
-            >
-              excluir
-            </LoadingButton>
             <Button onClick={() => close(false)}>cancelar</Button>
             <LoadingButton variant="contained" type="submit" loading={loading}>
               Salvar

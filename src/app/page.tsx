@@ -9,8 +9,10 @@ import DataTable from "@/components/organism/table";
 import findManyBooks from "@/api/books/findManyBook";
 import booksContext from "@/context/books-context";
 import { AppBar, Button, Typography, Dialog } from "@mui/material";
-import ModalContent from "@/components/molecules/modal";
 import CreateBookModal from "@/components/molecules/createBookModal";
+import RentalsDataTable from "@/components/organism/rentals";
+import reservesContext from "@/context/reserves-context";
+import findManyReserves, { Reserve } from "@/api/books/findManyReserves";
 
 interface OrganismObjects {
   [key: string]: React.ReactNode;
@@ -18,9 +20,36 @@ interface OrganismObjects {
 export type ModulesKey = "Books" | "Orders" | "Customers";
 
 export default function Dashboard() {
+  const { setReservesList } = React.useContext(reservesContext)!;
   const { module }: ModuleContextType = React.useContext(moduleContext)!;
+  const { bookList } = React.useContext(booksContext)!;
   const { setBookList } = React.useContext(booksContext)!;
   const [open, setOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    async function fetchData() {
+      const reservesListFetch = await findManyReserves();
+      const newReservesList = reservesListFetch.map(
+        (reserve: Reserve, index: number) => ({
+          ...reserve,
+          id: reserve.id || index + 1,
+        })
+      );
+      for (const element of bookList) {
+        for (let i = 0; i < newReservesList.length; i++) {
+          if (element.id === newReservesList[i].bookId) {
+            newReservesList[i] = {
+              ...newReservesList[i],
+              title: element.title,
+              author: element.author,
+            };
+          }
+        }
+      }
+      setReservesList(newReservesList);
+    }
+    fetchData();
+  }, [bookList, setReservesList]);
 
   React.useEffect(() => {
     async function fetchData() {
@@ -29,10 +58,6 @@ export default function Dashboard() {
     }
     fetchData();
   }, [setBookList]);
-
-  const handleCreateBook = () => {
-    handleOpen();
-  };
 
   const handleClose = () => {
     setOpen(false);
@@ -44,7 +69,7 @@ export default function Dashboard() {
 
   const pages: OrganismObjects = {
     Books: <DataTable />,
-    Orders: <p>orders</p>,
+    Orders: <RentalsDataTable />,
     Customers: <p>Customers</p>,
   };
 
@@ -63,7 +88,7 @@ export default function Dashboard() {
         }}
       >
         <Toolbar>
-          <Button color="inherit" variant="outlined" onClick={handleCreateBook}>
+          <Button color="inherit" variant="outlined" onClick={handleOpen}>
             Criar +
           </Button>
           <Typography

@@ -1,6 +1,6 @@
 import apiBooks from "./api";
 
-function deleteBook(bookId: string) {
+function deleteBook(bookId: number) {
   const promise = apiBooks.delete(`/${bookId}`);
   return promise;
 }

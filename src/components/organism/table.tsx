@@ -1,15 +1,33 @@
 import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useContext, useState } from "react";
-import { Dialog, IconButton } from "@mui/material";
+import Dialog from "@mui/material/Dialog";
 import ModalContent from "../molecules/modal";
 import booksContext from "@/context/books-context";
+import deleteBook from "@/api/books/deleteBook";
+import Button from "@mui/material/Button";
+import Snackbar from "@mui/material/Snackbar";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+export type TableLine = {
+  id: number;
+  title: string;
+  author: string;
+  publicationYear: string;
+};
 
 export default function DataTable() {
   const [open, setOpen] = useState(false);
-  const [editLine, setEditLine] = useState({});
-  const { bookList } = useContext(booksContext)!;
+  const [openSnack, setOpenSnack] = useState(false);
+  const [editLine, setEditLine] = useState<TableLine>();
+  const [snackMessage, setSnackMessage] = useState("");
+  const { bookList, setBookList } = useContext(booksContext)!;
+
+  const handleOpenSnackBar = () => {
+    setOpenSnack(true);
+  };
 
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 70 },
@@ -22,8 +40,8 @@ export default function DataTable() {
       width: 130,
     },
     {
-      field: "actions",
-      headerName: "Ações",
+      field: "edit",
+      headerName: "Editar Livro",
       width: 0,
       renderCell: () => (
         <IconButton onClick={handleOpen}>
@@ -31,8 +49,36 @@ export default function DataTable() {
         </IconButton>
       ),
     },
+    {
+      field: "delete",
+      headerName: "Excluir Livro",
+      width: 0,
+      renderCell: () => (
+        <IconButton onClick={handleDeleteBook}>
+          <DeleteIcon fontSize="small" />
+        </IconButton>
+      ),
+    },
   ];
+  const handleDeleteBook = async () => {
+    if (editLine) {
+      const promise = deleteBook(editLine.id);
 
+      promise
+        .then(() => {
+          const newBookList = bookList.filter(
+            (book) => book.id !== editLine.id
+          );
+          setBookList(newBookList);
+          setSnackMessage("Livro deletado com sucesso!");
+          handleOpenSnackBar();
+        })
+        .catch((error) => {
+          setSnackMessage(error.response.data);
+          handleOpenSnackBar();
+        });
+    }
+  };
   const handleOpen = () => {
     setOpen(true);
   };
@@ -43,6 +89,11 @@ export default function DataTable() {
 
   return (
     <div style={{ height: "auto", width: "100%" }}>
+      <Snackbar
+        open={openSnack}
+        autoHideDuration={6000}
+        message={snackMessage}
+      />
       <Dialog open={open} onClose={handleClose}>
         <ModalContent row={editLine} close={setOpen} />
       </Dialog>

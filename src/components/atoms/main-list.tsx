@@ -20,7 +20,7 @@ export default function Mainlist() {
         <ListItemIcon>
           <BookIcon />
         </ListItemIcon>
-        <ListItemText primary="Books" />
+        <ListItemText primary="Livros" />
       </ListItemButton>
       <ListItemButton
         onClick={() => {
@@ -30,7 +30,7 @@ export default function Mainlist() {
         <ListItemIcon>
           <ShoppingCartIcon />
         </ListItemIcon>
-        <ListItemText primary="Orders" />
+        <ListItemText primary="Aluguéis" />
       </ListItemButton>
       <ListItemButton
         onClick={() => {
@@ -40,7 +40,7 @@ export default function Mainlist() {
         <ListItemIcon>
           <PeopleIcon />
         </ListItemIcon>
-        <ListItemText primary="Customers" />
+        <ListItemText primary="Clientes" />
       </ListItemButton>
     </div>
   );
