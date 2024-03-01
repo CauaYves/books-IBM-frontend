@@ -13,6 +13,7 @@ import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
 import { Alert } from "@mui/material";
 import ReserveModalContent from "../molecules/reserveModal";
+import LoadingScreen from "../molecules/loading-screen";
 
 export type TableLine = {
   id: number;
@@ -137,18 +138,22 @@ export default function BooksDataTable() {
           setSnackMessage={setSnackMessage}
         />
       </Dialog>
-      <DataGrid
-        rows={bookList}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 15 },
-          },
-        }}
-        pageSizeOptions={[5, 10, 15, 20]}
-        checkboxSelection
-        onRowClick={(line) => setEditLine(line.row)}
-      />
+      {bookList.length === 0 ? (
+        <LoadingScreen />
+      ) : (
+        <DataGrid
+          rows={bookList}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 15 },
+            },
+          }}
+          pageSizeOptions={[5, 10, 15, 20]}
+          checkboxSelection
+          onRowClick={(line) => setEditLine(line.row)}
+        />
+      )}
     </div>
   );
 }

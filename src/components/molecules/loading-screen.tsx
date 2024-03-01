@@ -13,7 +13,7 @@ export default function LoadingScreen() {
         justifyContent: "center",
       }}
     >
-      <CircularProgress />
+      <CircularProgress size={80} />
     </Box>
   );
 }
