@@ -32,16 +32,6 @@ export default function Mainlist() {
         </ListItemIcon>
         <ListItemText primary="Aluguéis" />
       </ListItemButton>
-      <ListItemButton
-        onClick={() => {
-          setModule("Customers");
-        }}
-      >
-        <ListItemIcon>
-          <PeopleIcon />
-        </ListItemIcon>
-        <ListItemText primary="Clientes" />
-      </ListItemButton>
     </div>
   );
 }

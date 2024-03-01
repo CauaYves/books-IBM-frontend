@@ -17,7 +17,7 @@ import findManyReserves, { Reserve } from "@/api/books/findManyReserves";
 interface OrganismObjects {
   [key: string]: React.ReactNode;
 }
-export type ModulesKey = "Books" | "Orders" | "Customers";
+export type ModulesKey = "Books" | "Orders";
 
 export default function Dashboard() {
   const { setReservesList } = React.useContext(reservesContext)!;
@@ -70,7 +70,6 @@ export default function Dashboard() {
   const pages: OrganismObjects = {
     Books: <DataTable />,
     Orders: <RentalsDataTable />,
-    Customers: <p>Customers</p>,
   };
 
   return (

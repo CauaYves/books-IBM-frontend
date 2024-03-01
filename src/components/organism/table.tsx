@@ -7,10 +7,10 @@ import Dialog from "@mui/material/Dialog";
 import ModalContent from "../molecules/modal";
 import booksContext from "@/context/books-context";
 import deleteBook from "@/api/books/deleteBook";
-import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
+import { Alert } from "@mui/material";
+
 export type TableLine = {
   id: number;
   title: string;
@@ -28,7 +28,9 @@ export default function DataTable() {
   const handleOpenSnackBar = () => {
     setOpenSnack(true);
   };
-
+  const handleCloseSnackBar = () => {
+    setOpenSnack(false);
+  };
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 70 },
     { field: "title", headerName: "Título", width: 270 },
@@ -90,10 +92,13 @@ export default function DataTable() {
   return (
     <div style={{ height: "auto", width: "100%" }}>
       <Snackbar
+        onClose={handleCloseSnackBar}
         open={openSnack}
         autoHideDuration={6000}
-        message={snackMessage}
-      />
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert severity="info">{snackMessage} </Alert>
+      </Snackbar>
       <Dialog open={open} onClose={handleClose}>
         <ModalContent row={editLine} close={setOpen} />
       </Dialog>
