@@ -18,7 +18,7 @@ export type TableLine = {
   publicationYear: string;
 };
 
-export default function DataTable() {
+export default function BooksDataTable() {
   const [open, setOpen] = useState(false);
   const [openSnack, setOpenSnack] = useState(false);
   const [editLine, setEditLine] = useState<TableLine>();

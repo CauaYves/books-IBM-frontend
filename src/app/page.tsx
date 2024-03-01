@@ -5,14 +5,18 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Sidebar from "@/components/molecules/sidebar";
 import moduleContext, { ModuleContextType } from "@/context/module-context";
-import DataTable from "@/components/organism/table";
+import BooksDataTable from "@/components/organism/books-table";
 import findManyBooks from "@/api/endpoints/findManyBook";
 import booksContext from "@/context/books-context";
 import { AppBar, Button, Typography, Dialog } from "@mui/material";
 import CreateBookModal from "@/components/molecules/createBookModal";
-import RentalsDataTable from "@/components/organism/rentals";
+import RentalsDataTable from "@/components/organism/rentals-table";
 import reservesContext from "@/context/reserves-context";
-import findManyReserves, { Reserve } from "@/api/endpoints/findManyReserves";
+import findManyReserves from "@/api/endpoints/findManyReserves";
+import CopiesDataTable from "@/components/organism/copies-table";
+import copiesContext from "@/context/copies-context";
+import getAllCopiesFromAllBooks from "@/api/endpoints/getAllCopiesFromAllBooks";
+import { filterDataTable } from "@/utils/reserves-utils";
 
 interface OrganismObjects {
   [key: string]: React.ReactNode;
@@ -22,42 +26,24 @@ export type ModulesKey = "Books" | "Orders" | "Copies";
 export default function Dashboard() {
   const { setReservesList } = React.useContext(reservesContext)!;
   const { module }: ModuleContextType = React.useContext(moduleContext)!;
-  const { bookList } = React.useContext(booksContext)!;
   const { setBookList } = React.useContext(booksContext)!;
+  const { setCopiesList } = React.useContext(copiesContext)!;
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
     async function fetchData() {
-      const reservesListFetch = await findManyReserves();
-      const newReservesList = reservesListFetch.map(
-        (reserve: Reserve, index: number) => ({
-          ...reserve,
-          id: reserve.id || index + 1,
-        })
-      );
-      for (const element of bookList) {
-        for (let i = 0; i < newReservesList.length; i++) {
-          if (element.id === newReservesList[i].bookId) {
-            newReservesList[i] = {
-              ...newReservesList[i],
-              title: element.title,
-              author: element.author,
-            };
-          }
-        }
-      }
+      const [bookList, copiesList, reservesListFetch] = await Promise.all([
+        findManyBooks(),
+        getAllCopiesFromAllBooks(),
+        findManyReserves(),
+      ]);
+      const newReservesList = filterDataTable(reservesListFetch, bookList);
       setReservesList(newReservesList);
-    }
-    fetchData();
-  }, [bookList, setReservesList]);
-
-  React.useEffect(() => {
-    async function fetchData() {
-      const bookList = await findManyBooks();
+      setCopiesList(copiesList);
       setBookList(bookList);
     }
     fetchData();
-  }, [setBookList]);
+  }, [setBookList, setCopiesList, setReservesList]);
 
   const handleClose = () => {
     setOpen(false);
@@ -68,9 +54,9 @@ export default function Dashboard() {
   };
 
   const pages: OrganismObjects = {
-    Books: <DataTable />,
+    Books: <BooksDataTable />,
     Orders: <RentalsDataTable />,
-    Copies: <p>copies</p>,
+    Copies: <CopiesDataTable />,
   };
 
   return (

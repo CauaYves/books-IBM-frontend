@@ -4,19 +4,25 @@ import { Box, Button, TextField } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
 
-export default function CopiesModal({ row, close }: any) {
+export default function CopiesModal({
+  row,
+  close,
+  setRefreshList,
+  refreshList,
+}: any) {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     handleStartLoading();
     const formData = new FormData(event.currentTarget);
-    const bookId = row.bookId;
+    const bookId = row.id;
     const copies = formData.get("copies") as string;
     const promise = createCopies(bookId, copies);
     promise.then(() => {
       close(false);
       setLoading(false);
+      setRefreshList(!refreshList);
     });
   };
 

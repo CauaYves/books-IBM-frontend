@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { ModuleProvider } from "@/context/module-context";
 import { BooksProvider } from "@/context/books-context";
 import { ReservesProvider } from "@/context/reserves-context";
+import { CopiesProvider } from "@/context/copies-context";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
@@ -15,7 +16,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <BooksProvider>
           <ReservesProvider>
-            <ModuleProvider>{children}</ModuleProvider>
+            <CopiesProvider>
+              <ModuleProvider>{children}</ModuleProvider>
+            </CopiesProvider>
           </ReservesProvider>
         </BooksProvider>
       </body>

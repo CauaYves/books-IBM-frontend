@@ -1,6 +1,6 @@
 import apiCopies from "./copiesApi";
 
-function deleteCopies(bookId: string) {
+function deleteCopies(bookId: number) {
   const promise = apiCopies.delete(`/${bookId}`);
   return promise;
 }
