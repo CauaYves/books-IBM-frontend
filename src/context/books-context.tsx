@@ -6,7 +6,7 @@ import {
   SetStateAction,
   ReactNode,
 } from "react";
-import { Book } from "@/api/books/findManyBook";
+import { Book } from "@/api/endpoints/findManyBook";
 
 export interface BookContextType {
   bookList: Book[];

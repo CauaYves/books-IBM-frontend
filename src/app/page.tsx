@@ -6,18 +6,18 @@ import Toolbar from "@mui/material/Toolbar";
 import Sidebar from "@/components/molecules/sidebar";
 import moduleContext, { ModuleContextType } from "@/context/module-context";
 import DataTable from "@/components/organism/table";
-import findManyBooks from "@/api/books/findManyBook";
+import findManyBooks from "@/api/endpoints/findManyBook";
 import booksContext from "@/context/books-context";
 import { AppBar, Button, Typography, Dialog } from "@mui/material";
 import CreateBookModal from "@/components/molecules/createBookModal";
 import RentalsDataTable from "@/components/organism/rentals";
 import reservesContext from "@/context/reserves-context";
-import findManyReserves, { Reserve } from "@/api/books/findManyReserves";
+import findManyReserves, { Reserve } from "@/api/endpoints/findManyReserves";
 
 interface OrganismObjects {
   [key: string]: React.ReactNode;
 }
-export type ModulesKey = "Books" | "Orders";
+export type ModulesKey = "Books" | "Orders" | "Copies";
 
 export default function Dashboard() {
   const { setReservesList } = React.useContext(reservesContext)!;
@@ -70,6 +70,7 @@ export default function Dashboard() {
   const pages: OrganismObjects = {
     Books: <DataTable />,
     Orders: <RentalsDataTable />,
+    Copies: <p>copies</p>,
   };
 
   return (

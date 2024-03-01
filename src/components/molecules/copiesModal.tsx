@@ -1,4 +1,4 @@
-import createCopies from "@/api/books/createCopies";
+import createCopies from "@/api/endpoints/createCopies";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, TextField } from "@mui/material";
 import Typography from "@mui/material/Typography";

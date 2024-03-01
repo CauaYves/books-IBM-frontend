@@ -1,4 +1,4 @@
-import createBook from "@/api/books/createBook";
+import createBook from "@/api/endpoints/createBook";
 import booksContext from "@/context/books-context";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, TextField } from "@mui/material";

@@ -4,7 +4,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import BookIcon from "@mui/icons-material/Book";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import PeopleIcon from "@mui/icons-material/People";
+import CopyIcon from "@mui/icons-material/Archive";
 import moduleContext, { ModuleContextType } from "@/context/module-context";
 
 export default function Mainlist() {
@@ -31,6 +31,17 @@ export default function Mainlist() {
           <ShoppingCartIcon />
         </ListItemIcon>
         <ListItemText primary="Aluguéis" />
+      </ListItemButton>
+
+      <ListItemButton
+        onClick={() => {
+          setModule("Copies");
+        }}
+      >
+        <ListItemIcon>
+          <CopyIcon />
+        </ListItemIcon>
+        <ListItemText primary="Cópias" />
       </ListItemButton>
     </div>
   );

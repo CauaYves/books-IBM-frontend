@@ -1,4 +1,4 @@
-import { Reserve } from "@/api/books/findManyReserves";
+import { Reserve } from "@/api/endpoints/findManyReserves";
 import {
   createContext,
   useMemo,

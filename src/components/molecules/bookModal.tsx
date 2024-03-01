@@ -1,4 +1,4 @@
-import updateBook from "@/api/books/updateBook";
+import updateBook from "@/api/endpoints/updateBook";
 import booksContext from "@/context/books-context";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, TextField } from "@mui/material";
