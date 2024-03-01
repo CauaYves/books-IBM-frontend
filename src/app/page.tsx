@@ -32,13 +32,10 @@ export default function Dashboard() {
 
   React.useEffect(() => {
     async function fetchData() {
-      const [bookList, copiesList, reservesListFetch] = await Promise.all([
+      const [bookList, copiesList] = await Promise.all([
         findManyBooks(),
         getAllCopiesFromAllBooks(),
-        findManyReserves(),
       ]);
-      const newReservesList = filterDataTable(reservesListFetch, bookList);
-      setReservesList(newReservesList);
       setCopiesList(copiesList);
       setBookList(bookList);
     }

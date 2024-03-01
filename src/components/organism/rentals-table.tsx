@@ -1,10 +1,27 @@
 import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import reservesContext from "@/context/reserves-context";
+import getAllCopiesFromAllBooks from "@/api/endpoints/getAllCopiesFromAllBooks";
+import findManyReserves from "@/api/endpoints/findManyReserves";
+import { filterDataTable } from "@/utils/reserves-utils";
+import booksContext from "@/context/books-context";
 
 export default function RentalsDataTable() {
-  const { reservesList } = React.useContext(reservesContext)!;
+  const { reservesList, setReservesList } = React.useContext(reservesContext)!;
+  const { setBookList } = React.useContext(booksContext)!;
 
+  React.useEffect(() => {
+    async function fetchData() {
+      const [bookList, reservesListFetch] = await Promise.all([
+        getAllCopiesFromAllBooks(),
+        findManyReserves(),
+      ]);
+      const newReservesList = filterDataTable(reservesListFetch, bookList);
+      setReservesList(newReservesList);
+      setBookList(bookList);
+    }
+    fetchData();
+  }, [setBookList, setReservesList]);
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 70 },
     { field: "renter", headerName: "Alugador", width: 170 },

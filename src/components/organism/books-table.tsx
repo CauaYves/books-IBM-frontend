@@ -2,6 +2,8 @@ import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ShoppingBag from "@mui/icons-material/ShoppingBag";
+
 import { useContext, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import ModalContent from "../molecules/bookModal";
@@ -10,6 +12,7 @@ import deleteBook from "@/api/endpoints/deleteBook";
 import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
 import { Alert } from "@mui/material";
+import ReserveModalContent from "../molecules/reserveModal";
 
 export type TableLine = {
   id: number;
@@ -20,6 +23,7 @@ export type TableLine = {
 
 export default function BooksDataTable() {
   const [open, setOpen] = useState(false);
+  const [openReserveModal, setOpenReserveModal] = useState(false);
   const [openSnack, setOpenSnack] = useState(false);
   const [editLine, setEditLine] = useState<TableLine>();
   const [snackMessage, setSnackMessage] = useState("");
@@ -61,7 +65,22 @@ export default function BooksDataTable() {
         </IconButton>
       ),
     },
+    {
+      field: "rent",
+      headerName: "Alugar Livro",
+      width: 0,
+      renderCell: () => (
+        <IconButton onClick={handleRentBook}>
+          <ShoppingBag fontSize="small" />
+        </IconButton>
+      ),
+    },
   ];
+
+  const handleRentBook = () => {
+    handleOpenReserveModal();
+  };
+
   const handleDeleteBook = async () => {
     if (editLine) {
       const promise = deleteBook(editLine.id);
@@ -89,6 +108,14 @@ export default function BooksDataTable() {
     setOpen(false);
   };
 
+  const handleOpenReserveModal = () => {
+    setOpenReserveModal(true);
+  };
+
+  const handleCloseReserveModal = () => {
+    setOpenReserveModal(false);
+  };
+
   return (
     <div style={{ height: "auto", width: "100%" }}>
       <Snackbar
@@ -101,6 +128,14 @@ export default function BooksDataTable() {
       </Snackbar>
       <Dialog open={open} onClose={handleClose}>
         <ModalContent row={editLine} close={setOpen} />
+      </Dialog>
+      <Dialog open={openReserveModal} onClose={handleCloseReserveModal}>
+        <ReserveModalContent
+          row={editLine}
+          close={setOpenReserveModal}
+          setOpenSnack={setOpenSnack}
+          setSnackMessage={setSnackMessage}
+        />
       </Dialog>
       <DataGrid
         rows={bookList}

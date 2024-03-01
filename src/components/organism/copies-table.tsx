@@ -89,6 +89,9 @@ export default function CopiesDataTable() {
     if (editLine) {
       const bookId = editLine.id;
       await deleteCopies(bookId);
+      setRefreshList(!refreshList);
+      setSnackMessage("Cópias deletadas com sucesso!");
+      handleOpenSnackBar();
     }
   };
   const handleOpenSnackBar = () => {
